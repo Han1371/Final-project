@@ -1,32 +1,24 @@
 repositories:
-  # 1. LIMO 기본 구동 드라이버 (필수)
+  # 1. LIMO 기본 구동 드라이버
   limo_ros2:
     type: git
     url: https://github.com/agilexrobotics/limo_ros2.git
-    version: humble  # 사용 중인 ROS2 버전에 맞춤 (foxy 또는 humble)
+    version: humble
 
-  # 2. LiDAR 드라이버 (지도 생성용)
+  # 2. LiDAR 드라이버 (여기가 중요! main -> humble로 변경)
   ydlidar_ros2_driver:
     type: git
     url: https://github.com/YDLIDAR/ydlidar_ros2_driver.git
-    version: main
+    version: humble
 
-  # 3. 카메라 드라이버 (침입자 인식용)
+  # 3. 카메라 드라이버 (공개 저장소)
   orbbec_camera:
     type: git
     url: https://github.com/orbbec/orbbec_camera.git
     version: main
-
-  # 4. SLAM & Navigation (지도 생성 및 자율주행)
-  # 보통 apt로 설치하지만, 소스 수정이 필요하다면 포함
+  
+  # 4. SLAM 툴박스
   slam_toolbox:
     type: git
     url: https://github.com/SteveMacenski/slam_toolbox.git
     version: humble
-
-  # 5. 교재 예제 코드 (WeGo 패키지)
-  # 이 부분은 학교/교재에서 제공받은 URL이 있다면 기입, 없다면 제외
-  # limo_ros2_application:
-  #   type: git
-  #   url: <WeGo_또는_수업용_레포지토리_URL>
-  #   version: main
