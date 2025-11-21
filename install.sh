@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e  # 에러 발생 시 중단
+set -e  # 에러 발생 시 즉시 중단
 
 echo "🚀 LIMO Smart Sentinel 설치를 시작합니다..."
 
@@ -8,13 +8,20 @@ echo "📂 워크스페이스 생성 중 (wego_ws)..."
 mkdir -p ~/wego_ws/src
 cd ~/wego_ws
 
-# 2. 패키지 다운로드
+# 2. 패키지 다운로드 (이미 있으면 업데이트)
 echo "📥 패키지 다운로드 중..."
-vcs import src < ~/LIMO_Smart_Sentinel/limo.repos
+vcs import src < ~/LIMO_Smart_Sentinel/limo.repos || true
 
-# 3. [중요] 빈 폴더 강제 생성 (Git이 누락한 폴더 복구)
-echo "🔧 LIMO 패키지 누락 폴더 복구 중..."
-mkdir -p src/limo_ros2/limo_car/{worlds,models,maps,launch,urdf,params,log,src}
+# 3. [중요] LIMO 패키지 누락 폴더 복구 (에러 원인 제거)
+echo "🔧 LIMO 패키지 빈 폴더 강제 생성 중..."
+mkdir -p src/limo_ros2/limo_car/worlds
+mkdir -p src/limo_ros2/limo_car/models
+mkdir -p src/limo_ros2/limo_car/maps
+mkdir -p src/limo_ros2/limo_car/launch
+mkdir -p src/limo_ros2/limo_car/urdf
+mkdir -p src/limo_ros2/limo_car/params
+mkdir -p src/limo_ros2/limo_car/log
+mkdir -p src/limo_ros2/limo_car/src
 mkdir -p src/limo_ros2/limo_base/launch
 
 # 4. 의존성 설치
@@ -23,20 +30,27 @@ sudo apt update
 rosdep update
 rosdep install --from-paths src --ignore-src -r -y
 
-# 5. YDLidar-SDK 수동 설치 (없을 경우 대비)
-if [ ! -d "/usr/local/include/ydlidar" ]; then
+# 5. [수정됨] YDLidar-SDK 수동 설치
+# (이전 스크립트에서 mkdir build가 빠져서 에러가 났을 수 있음)
+if [ ! -f "/usr/local/lib/libydlidar_sdk.so" ]; then
     echo "📡 YDLidar SDK가 없어 설치합니다..."
     cd ~
+    # 기존에 실패한 폴더가 있다면 삭제 후 재시도
+    rm -rf YDLidar-SDK
     git clone https://github.com/YDLIDAR/YDLidar-SDK.git
-    cd YDLidar-SDK/build
+    cd YDLidar-SDK
+    mkdir build
+    cd build
     cmake ..
     make
     sudo make install
     cd ~/wego_ws
+else
+    echo "✅ YDLidar SDK가 이미 설치되어 있습니다."
 fi
 
-# 6. 빌드
-echo "🔨 전체 빌드 시작..."
+# 6. 빌드 (가장 중요한 단계)
+echo "🔨 전체 빌드 시작 (실패한 패키지도 다시 빌드)..."
 colcon build --symlink-install
 
 # 7. 환경 설정
