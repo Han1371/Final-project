@@ -86,10 +86,10 @@ source install/local_setup.bash
 ros2 launch limo_base limo_base.launch.py
 
 # (2) LiDAR 센서 구동
-ros2 launch ydlidar_ros2_driver ydlidar_launch.py
+ros2 launch ydlidar_ros2_driver ydlidar.launch.py
 
 # (3) 카메라 센서 구동
-ros2 launch orbbec_camera astra.launch.py
+ros2 launch orbbec_camera astra_stereo_u3.launch.py
 ```
 
 ### 2\. 지도 작성 (SLAM)
