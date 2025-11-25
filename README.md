@@ -43,7 +43,7 @@ ROS 2 Humble 환경에서 SLAM, Navigation2, Computer Vision 기술을 융합하
 ### 1. 레포지토리 복제 (Clone)
 ```bash
 cd ~
-git clone [https://github.com/dongmin8350/LIMO_Smart_Sentinel.git](https://github.com/dongmin8350/LIMO_Smart_Sentinel.git)
+git clone https://github.com/dongmin8350/LIMO_Smart_Sentinel.git
 cd LIMO_Smart_Sentinel
 ````
 
@@ -69,10 +69,10 @@ chmod +x install.sh
 ros2 launch limo_base limo_base.launch.py
 
 # (2) LiDAR 센서 구동
-ros2 launch ydlidar_ros2_driver ydlidar_launch.py
+ros2 launch ydlidar_ros2_driver ydlidar.launch.py
 
 # (3) 카메라 센서 구동
-ros2 launch orbbec_camera astra.launch.py
+ros2 launch orbbec_camera astra_stereo_u3.launch.py
 ```
 
 ### 2\. 지도 작성 (SLAM)
